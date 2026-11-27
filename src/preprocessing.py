@@ -7,6 +7,7 @@ Used by notebooks 01 and 02.
 
 import os
 import re
+import time
 
 import numpy as np
 import pandas as pd
@@ -20,13 +21,24 @@ FD_THRESHOLD = 0.5    # a person is excluded if their mean FD is above 0.5 mm ..
 FRAC_THRESHOLD = 0.2  # ... or if more than 20% of their volumes have FD above 0.5 mm
 
 
-def load_dataset(n_subjects=None):
+def load_dataset(n_subjects=None, max_tries=10):
     """Download (first time only) the development fMRI dataset.
 
     Returns the nilearn data object and a table with one row per participant,
     in the same order as the scan files.
+
+    The OSF server sometimes times out mid-download. Files that finished are
+    kept on disk, so we simply try again and it continues where it stopped.
     """
-    data = datasets.fetch_development_fmri(n_subjects=n_subjects, verbose=0)
+    for attempt in range(1, max_tries + 1):
+        try:
+            data = datasets.fetch_development_fmri(n_subjects=n_subjects, verbose=0)
+            break
+        except Exception as err:  # network errors (timeouts, dropped connections)
+            if attempt == max_tries:
+                raise
+            print(f"Download interrupted ({type(err).__name__}), retrying {attempt}/{max_tries - 1}...")
+            time.sleep(5)
     pheno = pd.DataFrame(data.phenotypic).reset_index(drop=True)
 
     # Safety check: row i of the table must belong to scan file i
