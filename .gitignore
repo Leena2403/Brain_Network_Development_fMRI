@@ -221,3 +221,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project: intermediate files recreated by the notebooks
+data/
+.DS_Store
