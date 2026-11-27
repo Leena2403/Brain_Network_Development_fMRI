@@ -148,7 +148,7 @@ Run the notebooks **in order** (01 → 04):
 
 All figures are written to `results/figures/`. Random seeds are fixed, so the numbers should match this README.
 
-**On Google Colab:** clone the repo in a cell, `%cd Brain_Network_Development_fMRI/notebooks`, then `!pip install -q -r ../requirements.txt` (see the first cell of each notebook).
+**On Google Colab:** clone the repo in a cell, `%cd Brain_Network_Development_fMRI/notebooks`, then `!pip install -q -r ../requirements.txt` Each Colab notebook runs on its own machine, so notebooks 02–04 rebuild the files they need in `data/` if they're missing (this adds a few minutes).
 
 ## 9. References
 
